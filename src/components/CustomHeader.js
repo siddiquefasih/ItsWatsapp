@@ -1,20 +1,56 @@
-import React from "react";
-import { Text, View,TouchableOpacity } from "react-native"
+import React, { useState } from "react";
+import { Text, View, TouchableOpacity } from "react-native"
+import { Switch } from 'react-native-paper';
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { connect } from "react-redux";
+import * as Actions from "../redux/actions/ActionsTypes"
+import { OnlineUser, OfflineUser } from '../../src/redux/actions/helperAction'
+
+const CustomHeader = (props) => {
+    console.log(props.userOnlineState.isOnline, "CustomHeeeeeeeeeeader")
+    // const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+
+    const onToggleSwitch = () => {
+        props.userOnlineState.isOnline ?
+        props.offlineUser()
+        :
+        props.onlineUser()
+    }
 
 
-const CustomHeader = ({ heading ,navigation}) => {
     return (
-        <View style={{ backgroundColor: "#B71C1C", padding: 15, flexDirection: "row" }}>
-            <TouchableOpacity>
-                <Ionicons
-                    name="menu-outline"
-                    size={24}
-                    color="white"
-                    onPress={() => navigation.openDrawer()}
-                />
-            </TouchableOpacity>
-            <Text style={{ marginStart: 15, textAlign: "center", color: "white", fontSize: 18 }}>{heading}</Text></View>
+        <View style={{ backgroundColor: "#aa0027", padding: 15, flexDirection: "row", justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: "row" }}>
+
+                <TouchableOpacity>
+                    <Ionicons
+                        name="menu-outline"
+                        size={24}
+                        color="white"
+                        onPress={() => props.navigation.openDrawer()}
+                    />
+                </TouchableOpacity>
+                <Text style={{ marginStart: 15, textAlign: "center", color: "white", fontSize: 18 }}>{props.heading}</Text>
+
+            </View>
+
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={{ alignSelf: "center", color: "#fff", fontSize: 18 }}>Go Online</Text>
+                <Switch style={{ alignContent: "flex-end" }} value={props.userOnlineState.isOnline} onValueChange={onToggleSwitch} />
+            </View>
+
+        </View>
     )
 }
-export default CustomHeader
+
+const mapStateToProps = (state) => ({
+    userOnlineState: state.HelperReducer
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onlineUser: () => dispatch(OnlineUser({ type: Actions.ONLINESTATUS })),
+    offlineUser: () => dispatch(OfflineUser({ type: Actions.OFFLINESTATUS })),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomHeader); 

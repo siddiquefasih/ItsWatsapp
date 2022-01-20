@@ -57,12 +57,12 @@ const Intelligence = ({ navigation }) => {
     ];
 
     let dashbaordData = [
-        { count: 4, title: "Daily Active User" },
-        { count: 4, title: "Weekly Active User" },
-        { count: 4, title: "Monthly Active User" },
-        { count: '12/50', title: "Daily Inbound/Outbound" },
-        { count: '0/0', title: "Weekly Inbound/Outbound" },
-        { count: '266/277', title: "Monthly Inbound/Outbound" },
+        {key:1, count: 4, title: "Daily Active User" },
+        {key:2, count: 4, title: "Weekly Active User" },
+        {key:3, count: 4, title: "Monthly Active User" },
+        {key:4, count: '12/50', title: "Daily Inbound/Outbound" },
+        {key:5, count: '0/0', title: "Weekly Inbound/Outbound" },
+        {key:6, count: '266/277', title: "Monthly Inbound/Outbound" },
     ]
     return (
         <ScrollView style={{ backgroundColor: "#F5F5F5", flex: 1 }}>

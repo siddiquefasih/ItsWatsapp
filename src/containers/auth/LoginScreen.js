@@ -1,24 +1,25 @@
-import { Assets } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 import { Text, View, Image, ImageBackground, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import FastImage from 'react-native-fast-image'
-import { Header } from "react-native/Libraries/NewAppScreen";
 import { connect } from 'react-redux';
 import * as Actions from '../../redux/actions/ActionsTypes'
 import { Login } from '../../redux/actions/loginAction'
-import { Token } from "../../redux/actions/tokenAction";
+    import { Token } from "../../redux/actions/tokenAction";
 
 const LoginScreen = (props) => {
 
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPssword] = useState('');
-    useEffect(()=>{
+    useEffect(() => {
         props.tokenAction()
-    },[])
+    }, [])
 
-    console.log(props.tokenState.client_token,'tokenStatetokenStatetokenStatetokenStatetokenStatetokenState')
+    console.log(props,"These are Prrrrrrrrrropssss")
+
     return (
+
         <View style={{ flex: 1 }}>
+
             <ImageBackground style={{ flex: 1 }} source={require('./../../assets/loginBg.jpg')}>
 
                 <FastImage
@@ -27,6 +28,7 @@ const LoginScreen = (props) => {
                 />
 
                 <View style={{ marginHorizontal: 25, justifyContent: "center", alignContent: "center", flex: 1 }}>
+
                     <Text style={{ alignSelf: "center", color: "white", fontSize: 22, fontWeight: "bold", marginTop: 20, marginBottom: 5 }}>
                         Welcome to Intellexal Solutions!
                     </Text>
@@ -34,13 +36,13 @@ const LoginScreen = (props) => {
                         Login to your account
                     </Text>
                     <View style={{ borderRadius: 6, borderColor: "white", borderWidth: 1, marginBottom: 10 }}>
-                        <TextInput style={{ paddingHorizontal: 10,color:"white" }}  placeholder="User Name" placeholderTextColor='white' onChangeText={(userEmail) => setUserEmail(userEmail)} >
+                        <TextInput style={{ paddingHorizontal: 10, color: "white" }} placeholder="User Name" placeholderTextColor='white' onChangeText={(userEmail) => setUserEmail(userEmail)} >
 
                         </TextInput>
                     </View>
 
                     <View style={{ borderRadius: 6, marginTop: 10, borderWidth: 1, borderColor: "white", marginBottom: 15 }}>
-                        <TextInput style={{ paddingHorizontal: 10,color:"white" }}secureTextEntry placeholder="Password" placeholderTextColor='white' onChangeText={(userPassword) => setUserPssword(userPassword)}>
+                        <TextInput style={{ paddingHorizontal: 10, color: "white" }} secureTextEntry placeholder="Password" placeholderTextColor='white' onChangeText={(userPassword) => setUserPssword(userPassword)}>
 
                         </TextInput>
                     </View>
@@ -54,26 +56,28 @@ const LoginScreen = (props) => {
 
                     <TouchableOpacity
                         style={styles.buttonStyle}
-                        onPress={() => { props.loginAction({ username: userEmail, password: userPassword },props.tokenState.client_token) }}
+                        onPress={() => { props.loginAction({ username: userEmail, password: userPassword }, props.tokenState.client_token,props) }}
                         activeOpacity={0.5}>
 
                         <Text style={styles.buttonTextStyle}>Login</Text>
 
                     </TouchableOpacity>
+
                 </View>
 
             </ImageBackground>
 
         </View>
+
     )
 }
 const mapStateToProps = (state) => ({
-    login: state.AuthReducer.login,
-    tokenState:state.TokenReducer
+    loginState: state.AuthReducer,
+    tokenState: state.TokenReducer,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loginAction: (obj,token) => dispatch(Login({ type: Actions.LOGIN, data: obj,client_token:token })),
+    loginAction: (obj, token,props) => dispatch(Login({ type: Actions.LOGIN, data: obj, client_token: token,props:props.navigation})),
     tokenAction: () => dispatch(Token())
 
 });

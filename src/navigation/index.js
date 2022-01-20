@@ -7,6 +7,7 @@ import Intelligence from "../containers/auth/Intelligence";
 import Chat from "../containers/auth/Chat";
 import MyDrawer from "./drawerNavigation";
 import Messages from "../containers/auth/Messages";
+import Conversation from "../containers/auth/Conversation";
 const Stack = createStackNavigator();
 
 function MyStack() {
@@ -14,9 +15,9 @@ function MyStack() {
         <Stack.Navigator>
             <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Intelligence" component={MyDrawer} options={{ headerShown: false }} />
-            <Stack.Screen name="Messages" component={Messages} options={{ headerShown: false }} />
-            <Stack.Screen name="Chat" component={MyDrawer} options={{ headerShown: false }} />
-            <Stack.Screen name="Splash" component={Splash} />
+             <Stack.Screen name="Messages" component={Messages} options={{ headerShown: false }} />
+            <Stack.Screen name="Conversation" component={Conversation} options={{ headerShown: false }} />
+             {/*<Stack.Screen name="Splash" component={Splash} />  */}
         </Stack.Navigator>
 
     );

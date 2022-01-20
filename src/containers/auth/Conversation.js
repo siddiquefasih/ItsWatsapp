@@ -3,44 +3,39 @@ import { Text, View, Image, ImageBackground, TextInput, TouchableOpacity, StyleS
 import CustomHeader from "../../components/CustomHeader";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
-import { chatHistory } from "../../redux/actions/ChatAction"
-import * as Actions from "../../redux/actions/ActionsTypes"
+import { ConversationAction } from "../../redux/actions/ConversationAction"
 
-const Chat = (props) => {
 
-    let { chatHistoryData } = props.chatHistoryState
-    // const [conversationHistory, setConversationHistory] = useState([])
+const Conversation = (props) => {
+
     useEffect(() => {
-        props.chatAction(props.loginState.userToken)
+        props.conversationAction()
     }, [])
+    console.log(props.conversationState.conversationData, "ConversationConversation")
 
-    // useEffect(() => {
-    //     setConversationHistory(chatHistoryData)
-    // }, [chatHistoryData])
-
-    console.log(chatHistoryData, "ChatPropsssssssssssssssssssssss")
+    let conversationHistory = props.conversationState.conversationData
 
     return (
         <View style={{ flex: 1 }}>
-            <CustomHeader heading={"Chat"} navigation={props.navigation} />
+            <CustomHeader heading={"Conversation"} navigation={props.navigation} />
             {props.onlineStates.isOnline ? (
                 <ScrollView>
 
-                    {chatHistoryData.map(val => {
+                    {conversationHistory.map(val => {
                         return (
                             <TouchableOpacity key={val.id} style={{ marginVertical: 1, flexDirection: "row", backgroundColor: "#fff", padding: 10, flex: 1 }} onPress={() => props.navigation.navigate("Messages", { data: val })}>
 
-                                <Image style={{ borderRadius: 40, height: 60, width: 60, backgroundColor: "black" }} ></Image>
+                                <Image style={{ borderRadius: 40, height: 60, width: 60, backgroundColor: "grey" }} ></Image>
 
                                 <View style={{ flexDirection: "column" }}>
-                                    <Text style={{ color: "black", marginStart: 8, marginTop: 8, fontSize: 16 }}>
+                                    <Text style={{ color: "grey", marginStart: 8, fontSize: 16 }}>
                                         {val.name}
                                     </Text>
-                                    <Text style={{ flex: 1, alignSelf: "flex-end", color: "black", marginStart: 8, marginTop: 4 }}>
-                                        {val.last_closed}
+                                    <Text style={{ flex: 1, color: "grey", marginStart: 8, marginTop: 4 }}>
+                                        {val.dtu}
                                     </Text>
-                                    <Text style={{ color: "black", marginStart: 8, marginTop: 4 }}>
-                                        {val.number}
+                                    <Text style={{ color: "grey", marginStart: 8, marginTop: 4 }}>
+                                        {val.last_message}
                                     </Text>
 
                                 </View>
@@ -55,23 +50,19 @@ const Chat = (props) => {
                 <ImageBackground style={{ flex: 1 }} source={require('./../../assets/rainGrey.png')} />
 
             }
-
         </View>
-
     )
 }
+
+
 const mapStateToProps = (state) => ({
+    conversationState: state.ConversationReducer,
     onlineStates: state.HelperReducer,
-    chatHistoryState: state.ChatHistoryReducer,
-    loginState: state.AuthReducer
+    // loginState: state.AuthReducer,
 
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    chatAction: (token) => dispatch(chatHistory(token)),
-    // tokenAction: () => dispatch(Token())
-
+    conversationAction: (token) => dispatch(ConversationAction(token))
 });
-
-
-export default connect(mapStateToProps,mapDispatchToProps)(Chat);
+export default connect(mapStateToProps, mapDispatchToProps)(Conversation);

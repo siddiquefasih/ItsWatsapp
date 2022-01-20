@@ -1,19 +1,24 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Chat from "../containers/auth/Chat";
-import { StyleSheet, SafeAreaView, Image } from "react-native";
+import { StyleSheet, SafeAreaView, Text, View } from "react-native";
 import Intelligence from "../containers/auth/Intelligence";
-import Sidebar from "../containers/auth/CustomDrawer";
+import Conversation from "../containers/auth/Conversation";
+import DrawerContent from "../containers/auth/DrawerContent"
 
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
     return (
-        <Drawer.Navigator >
+
+        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
             <Drawer.Screen name="Intelligence" component={Intelligence} />
             <Drawer.Screen name="Chat" component={Chat} />
+            <Drawer.Screen name="Conversation" component={Conversation}/>
+
         </Drawer.Navigator>
-    )
+
+    );
 }
 
 export default MyDrawer;
