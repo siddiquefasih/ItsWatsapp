@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Image, ImageBackground, TextInput, TouchableOpacity, StyleSheet, Switch, ActionSheetIOS } from "react-native";
+import { Text, View, Image, ImageBackground, TextInput, TouchableOpacity, StyleSheet, Switch, ActionSheetIOS,ActivityIndicator } from "react-native";
 import CustomHeader from "../../components/CustomHeader";
 import { ScrollView } from "react-native-gesture-handler";
-import { connect } from "react-redux";
 import { chatHistory } from "../../redux/actions/ChatAction"
-import * as Actions from "../../redux/actions/ActionsTypes"
+import { useSelector,useDispatch } from "react-redux";
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const Chat = (props) => {
 
-    let { chatHistoryData } = props.chatHistoryState
-    // const [conversationHistory, setConversationHistory] = useState([])
+    let dispatch = useDispatch();
     useEffect(() => {
-        props.chatAction(props.loginState.userToken)
-    }, [])
+        props.navigation.addListener("focus", () => {
+            dispatch(chatHistory(loginState.userToken))
+        })
+    },[])
+    let loader = useSelector(state => state.ChatHistoryReducer.isLoading)
+    let result = useSelector(state=> state.ChatHistoryReducer.chatHistoryData )
+    let onlineStates = useSelector(state=> state.HelperReducer )
+    let loginState = useSelector(state=> state.AuthReducer )
+    // let[load,setLoader] = useState(loader);
 
-    // useEffect(() => {
-    //     setConversationHistory(chatHistoryData)
-    // }, [chatHistoryData])
-
-    console.log(chatHistoryData, "ChatPropsssssssssssssssssssssss")
-
+    console.log(result,"statestatestatestate");
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1,paddingTop:getStatusBarHeight() }}>
             <CustomHeader heading={"Chat"} navigation={props.navigation} />
-            {props.onlineStates.isOnline ? (
-                <ScrollView>
+            {onlineStates.isOnline ? (
 
-                    {chatHistoryData.map(val => {
+                <ScrollView>
+                { loader ? ( <ActivityIndicator size="large" style={{flex:1,justifyContent:"center",alignContent:"center"}}color="#aa0027"/>  ) :
+
+                     result.length > 0 ? ( result.map(val => {
                         return (
                             <TouchableOpacity key={val.id} style={{ marginVertical: 1, flexDirection: "row", backgroundColor: "#fff", padding: 10, flex: 1 }} onPress={() => props.navigation.navigate("Messages", { data: val })}>
 
@@ -37,7 +40,6 @@ const Chat = (props) => {
                                         {val.name}
                                     </Text>
                                     <Text style={{ flex: 1, alignSelf: "flex-end", color: "black", marginStart: 8, marginTop: 4 }}>
-                                        {val.last_closed}
                                     </Text>
                                     <Text style={{ color: "black", marginStart: 8, marginTop: 4 }}>
                                         {val.number}
@@ -48,8 +50,11 @@ const Chat = (props) => {
                             </TouchableOpacity>
                         )
 
-                    })}
-
+                    })
+                    ) :null 
+                }
+                    
+            {/* } */}
                 </ScrollView>
             ) :
                 <ImageBackground style={{ flex: 1 }} source={require('./../../assets/rainGrey.png')} />
@@ -60,18 +65,12 @@ const Chat = (props) => {
 
     )
 }
-const mapStateToProps = (state) => ({
-    onlineStates: state.HelperReducer,
-    chatHistoryState: state.ChatHistoryReducer,
-    loginState: state.AuthReducer
 
-});
+// const mapDispatchToProps = (dispatch) => ({
+//     chatAction: ({ token, isLoading }) => dispatch(chatHistory({ token, isLoading })),
+//     // tokenAction: () => dispatch(Token())
 
-const mapDispatchToProps = (dispatch) => ({
-    chatAction: (token) => dispatch(chatHistory(token)),
-    // tokenAction: () => dispatch(Token())
-
-});
+// });
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Chat);
+export default Chat;

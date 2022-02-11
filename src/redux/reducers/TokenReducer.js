@@ -1,6 +1,10 @@
 import * as Actions from "../actions/ActionsTypes"
 
-const TokenReducer = (state = {}, action) => {
+const initialState = {
+    client_token:'',
+}
+
+const TokenReducer = (state =initialState, action) => {
     // console.log(action, 'reducerrrrrrrrrrrrrr')
 
     switch (action.type) {

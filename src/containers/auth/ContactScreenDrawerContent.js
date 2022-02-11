@@ -10,19 +10,20 @@ let vh = Dimensions.get('window').height
 let vw = Dimensions.get('window').width
 import { useSelector } from 'react-redux';
 import ContactBook from "./ContactBook";
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-const DrawerContent = (props) => {
+const ContactScreenDrawerContent = (ContactScreenProps) => {
+
+    console.log(ContactScreenProps,"ContactScreenProps");
     //  console.log(props.loginState.userData.email, '=====================loginState')
 
-    let loginState = useSelector(state=>state.AuthReducer)
+    // let loginState = useSelector(state=>state.AuthReducer)
 
     return (
         <View style={{ flex: 1 }}>
 
             <View style={{ height: "30%", backgroundColor: "#e73859" }}>
 
-                <View style={{ marginBottom: 15, flexDirection: "row", justifyContent: "space-between", marginTop: getStatusBarHeight() + 5}}>
+                <View style={{ marginBottom: 15, flexDirection: "row", justifyContent: "space-between", marginTop: 10 }}>
                    
                     <View style={{ flexDirection: "row" }}>
                         <Image
@@ -40,21 +41,21 @@ const DrawerContent = (props) => {
 
                 </View>
                 <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: 15 }}>
-                    <View style={{ flexDirection: 'row' }}>
+                    {/* <View style={{ flexDirection: 'row' }}>
                         <Text style={styles.textStyle}>
                             {loginState.userData.firstName}
                         </Text>
                         <Text style={styles.textStyle}>
                             {loginState.userData.lastName}
                         </Text>
-                    </View>
-
+                    </View> */}
+{/* 
                     <Text style={styles.textStyle}>
                        {loginState.userData.email}
-                    </Text>
+                    </Text> */}
 
                 </View>
-                <View style={{ position: 'absolute', bottom: -vh * 0.05, alignItems: 'center', width: '100%' }}>
+                {/* <View style={{ position: 'absolute', bottom: -vh * 0.05, alignItems: 'center', width: '100%' }}>
                     <View style={{ backgroundColor: '#fff', borderRadius: 50, padding: 3, paddingVertical: 7 }}>
                         <Avatar.Image
                             style={{ marginHorizontal: 4 }}
@@ -63,7 +64,7 @@ const DrawerContent = (props) => {
                         />
                     </View>
 
-                </View>
+                </View> */}
 
             </View>
 
@@ -77,11 +78,7 @@ const DrawerContent = (props) => {
 
                 <View style={{ marginEnd: 15, marginTop: 5 }}>
 
-                    <DrawerButon heading="Intelligence" iconType={'dashboard'} navigate={_ => props.navigation.navigate('Intelligence')} />
-                    <DrawerButon heading="Chat History" iconType={'chat'} navigate={_ => props.navigation.navigate('Chat')} />
-                    <DrawerButon heading="Conversation" iconType={'chat'} navigate={_ => props.navigation.navigate('Conversation')} />
-                    <DrawerButon heading="Contact Book" iconType={'contact'} navigate={_=>props.navigation.navigate("ContactBook")} />
-                    <DrawerButon heading="Reports" iconType={'assest'} />
+    
                     <DrawerButon heading="Settings" iconType={'setting'} />
                 </View>
 
@@ -121,4 +118,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DrawerContent;
+export default ContactScreenDrawerContent;

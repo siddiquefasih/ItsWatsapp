@@ -1,88 +1,113 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Image, ImageBackground, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, Image, ImageBackground, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Dimensions, Keyboard } from "react-native";
 import FastImage from 'react-native-fast-image'
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
+import NavigationService from "../../components/NavigationService";
 import * as Actions from '../../redux/actions/ActionsTypes'
 import { Login } from '../../redux/actions/loginAction'
-    import { Token } from "../../redux/actions/tokenAction";
+import { Token } from "../../redux/actions/tokenAction";
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { ActivityIndicator } from "react-native-paper";
+import Toast from 'react-native-toast-message';
+
+let vh = Dimensions.get('window').height
+let vw = Dimensions.get('window').width
 
 const LoginScreen = (props) => {
-
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPssword] = useState('');
+    const [show, setShow] = useState(true);
+    const [loader, setLoader] = useState(false);
+
+    let dispatch = useDispatch();
+
     useEffect(() => {
-        props.tokenAction()
+        dispatch(Token())
     }, [])
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            setShow(false);
+        });
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            setShow(true);
+        });
 
-    console.log(props,"These are Prrrrrrrrrropssss")
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
 
+    let token = useSelector(state => state.TokenReducer.client_token)
+    // let loginState = useSelector(state => state.AuthReducer)
+
+    console.log(token, "TOkENNNnnnnnnn")
+    const login = () => {
+       setLoader(true)
+        const data = { username: userEmail, password: userPassword }
+        dispatch(Login(data, token,() =>setLoader(false)))
+    }
     return (
-
-        <View style={{ flex: 1 }}>
-
-            <ImageBackground style={{ flex: 1 }} source={require('./../../assets/loginBg.jpg')}>
-
+        <ImageBackground
+            style={{ flex: 1, paddingTop: getStatusBarHeight() + 20 }}
+            imageStyle={{ flex: 1 }}
+            source={require('./../../assets/loginBg.jpg')}
+        >
+            {show &&
                 <FastImage
-                    style={{ width: "100%", height: 100, alignSelf: "center", marginTop: "10%" }}
+                    style={{ width: '80%', height: 100, alignSelf: "center" }}
+                    resizeMode="contain"
                     source={require('./../../assets/loginGif.gif')}
                 />
+            }
+            <View style={{ paddingHorizontal: 25, paddingTop: 40, alignContent: "center", flex: 1 }}>
 
-                <View style={{ marginHorizontal: 25, justifyContent: "center", alignContent: "center", flex: 1 }}>
+                <Text style={{ alignSelf: "center", color: "white", fontSize: 20, fontWeight: "bold", marginTop: 10 }}>
+                    Welcome to Intellexal Solutions!
+                </Text>
 
-                    <Text style={{ alignSelf: "center", color: "white", fontSize: 22, fontWeight: "bold", marginTop: 20, marginBottom: 5 }}>
-                        Welcome to Intellexal Solutions!
-                    </Text>
-                    <Text style={{ alignSelf: "center", color: "white", fontSize: 22, fontWeight: "bold", marginBottom: 25 }}>
-                        Login to your account
-                    </Text>
-                    <View style={{ borderRadius: 6, borderColor: "white", borderWidth: 1, marginBottom: 10 }}>
-                        <TextInput style={{ paddingHorizontal: 10, color: "white" }} placeholder="User Name" placeholderTextColor='white' onChangeText={(userEmail) => setUserEmail(userEmail)} >
+                {show && <Text
+                    style={{ alignSelf: 'center', color: 'white', marginVertical: 10, textAlign: 'center' }}
+                >Using our experience from across industries and continents, we tailor solutions that fit your business needs.
+                    {"\n\n"}
+                    As a WhatsApp Business Solution Provider, we enable enterprises to connect to WhatsApp directly – either through our API or using our web-based interface.
+                </Text>}
 
-                        </TextInput>
-                    </View>
+                <Text style={{ alignSelf: "center", color: "white", fontSize: 20, fontWeight: "bold", marginBottom: 25, marginTop: 5 }}>
+                    Login to your account
+                </Text>
 
-                    <View style={{ borderRadius: 6, marginTop: 10, borderWidth: 1, borderColor: "white", marginBottom: 15 }}>
-                        <TextInput style={{ paddingHorizontal: 10, color: "white" }} secureTextEntry placeholder="Password" placeholderTextColor='white' onChangeText={(userPassword) => setUserPssword(userPassword)}>
+         
+                    <TextInput
+                        style={{height:50, paddingHorizontal: 10, color: "white",borderRadius: 6, borderColor: "white", borderWidth: 1, marginBottom: 10 }} placeholder="User Name" placeholderTextColor='white' onChangeText={(userEmail) => setUserEmail(userEmail)} />
 
-                        </TextInput>
-                    </View>
+                <TextInput
+                    style={{ height:50,paddingHorizontal: 10, color: "white", borderRadius: 6, marginTop: 10, borderWidth: 1, borderColor: "white", marginBottom: 15 }} secureTextEntry placeholder="Password" placeholderTextColor='white' onChangeText={(userPassword) => setUserPssword(userPassword)} />
 
-                    <TouchableOpacity
-                        activeOpacity={0.5}>
+                <TouchableOpacity
+                    activeOpacity={0.5}>
 
-                        <Text style={styles.forgotPasswordTextStyle}>Forgot Password</Text>
+                    <Text style={styles.forgotPasswordTextStyle}>Forgot Password</Text>
 
-                    </TouchableOpacity>
+                </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={styles.buttonStyle}
-                        onPress={() => { props.loginAction({ username: userEmail, password: userPassword }, props.tokenState.client_token,props) }}
-                        activeOpacity={0.5}>
+                <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={login}
+                    activeOpacity={0.5}>
 
-                        <Text style={styles.buttonTextStyle}>Login</Text>
+                    {loader?<ActivityIndicator color="white"size={"small"}/>:<Text style={styles.buttonTextStyle}>Login</Text>
+                    }
+                </TouchableOpacity>
 
-                    </TouchableOpacity>
+            </View>
 
-                </View>
-
-            </ImageBackground>
-
-        </View>
+        </ImageBackground>
 
     )
 }
-const mapStateToProps = (state) => ({
-    loginState: state.AuthReducer,
-    tokenState: state.TokenReducer,
-});
 
-const mapDispatchToProps = (dispatch) => ({
-    loginAction: (obj, token,props) => dispatch(Login({ type: Actions.LOGIN, data: obj, client_token: token,props:props.navigation})),
-    tokenAction: () => dispatch(Token())
-
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
+export default LoginScreen;
 
 const styles = StyleSheet.create({
 
@@ -105,7 +130,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginHorizontal: 5,
         marginTop: 15,
-        padding: 10,
+        paddingHorizontal: 10,
+        height:50,
+        justifyContent:"center"
 
     },
 

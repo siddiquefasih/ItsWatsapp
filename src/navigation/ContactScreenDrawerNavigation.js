@@ -1,29 +1,24 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import Chat from "../containers/auth/Chat";
 import { StyleSheet, SafeAreaView, Text, View } from "react-native";
-import Intelligence from "../containers/auth/Intelligence";
-import Conversation from "../containers/auth/Conversation";
-import DrawerContent from "../containers/auth/DrawerContent"
 import ContactBook from "../containers/auth/ContactBook";
+import BlockedContacts from "../containers/auth/BlockedContacts";
+import ContactGroup from "../containers/auth/ContactGroup";
+import ContactScreenDrawerContent from "../containers/auth/ContactScreenDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer() {
+function ContactScreenDrawerNavigation() {
     return (
-
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-            <Drawer.Screen name="Intelligence" component={Intelligence} />
-            <Drawer.Screen name="Chat" component={Chat} />
-            <Drawer.Screen name="Conversation" component={Conversation} />
+        <Drawer.Navigator  drawerContent={ContactScreenProps => <ContactScreenDrawerContent {...ContactScreenProps} />}>
             <Drawer.Screen name="ContactBook" component={ContactBook} />
-
+            <Drawer.Screen name="BlockedContacts" component={BlockedContacts} />
+            <Drawer.Screen name="ContactGroup" component={ContactGroup} />
         </Drawer.Navigator>
-
     );
 }
 
-export default MyDrawer;
+export default ContactScreenDrawerNavigation;
 
 const styles = StyleSheet.create({
     sideMenuProfileIcon: {

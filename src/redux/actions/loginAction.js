@@ -1,17 +1,24 @@
 import * as Actions from './ActionsTypes';
 import axios from 'axios';
-export const Login = (data) => {
-    // console.log(data, "prrrrrrrrrrrrrrrrrrrropppppppppppppppps")
+import { baseUrl } from "../../components/AppUrl"
+import NavService from "../../components/NavigationService"
+
+
+export const Login = (data, client_token,loader) => {
+    // console.log(props, "prrrrrrrrrrrrrrrrrrrropppppppppppppppps")
     return async (dispatch) => {
 
         axios
-            .post(`https://wentterminus.its.com.pk/v1/auth/user`, data.data, { headers: { "xt-client-token": data.client_token } })
+            .post(`${baseUrl}auth/user`, data, { headers: { "xt-client-token": client_token } })
             .then(response => {
-                dispatch({ type: Actions.LOGIN, userData: response.data.data.user, userToken: response.data.data.token })
-                data.props.navigate('Intelligence')
+                const {user,token} = response.data.data
+                dispatch({ type: Actions.LOGIN, userData: user, userToken: token})
+                loader()
+                NavService.reset(0,[{name:"Intelligence"}])
             })
             .catch(error => {
-                alert("Login Failed")
+                alert(error)    
+                loader()
             });
     }
 }
